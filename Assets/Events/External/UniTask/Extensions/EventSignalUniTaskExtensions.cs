@@ -1,4 +1,6 @@
-﻿using CatCode.Events.Promises;
+﻿#if EVENTS_UNITASK_SUPPORT
+
+using CatCode.Events.Promises;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 
@@ -13,3 +15,5 @@ namespace CatCode.Events
         }
     }
 }
+
+#endif

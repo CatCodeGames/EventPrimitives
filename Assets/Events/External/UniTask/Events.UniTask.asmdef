@@ -1,4 +1,4 @@
-﻿{
+{
     "name": "Events.UniTask",
     "rootNamespace": "",
     "references": [
@@ -12,6 +12,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.cysharp.unitask",
+            "expression": "",
+            "define": "EVENTS_UNITASK_SUPPORT"
+        }
+    ],
     "noEngineReferences": false
 }

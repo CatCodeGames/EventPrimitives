@@ -6,6 +6,10 @@ This allows working with them directly through a unified interface for subscript
 - Unification. Using unified data types eliminates duplicate subscription and awaiting logic for every new class.
 - Asynchrony. await support via UniTask.
 
+### Installation
+UMP (Unity Package Manager)  
+`https://github.com/CatCodeGames/EventPrimitives.git?path=Assets/Events`
+
 # Using
 ```csharp
 // Initialize with notification only on value change
@@ -89,6 +93,10 @@ await state.WaitAsync((value) => value > 10, checkInitialState: true, cts.Token)
 // Асинхронное ожидание следующего изменения значения
 await state.WaitAsync(cts.Token);
 ```
+
+### Установка
+UMP (Unity Package Manager)  
+`https://github.com/CatCodeGames/EventPrimitives.git?path=Assets/Events`
 
 # Architecture and API
 

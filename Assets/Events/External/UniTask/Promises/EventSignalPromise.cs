@@ -1,4 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
+﻿#if EVENTS_UNITASK_SUPPORT
+
+using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
 using UnityEngine.Pool;
@@ -103,3 +105,5 @@ namespace CatCode.Events.Promises
         }
     }
 }
+
+#endif

@@ -1,5 +1,5 @@
 {
-    "name": "Events.UniTask",
+    "name": "CatCode.Events.UniTask",
     "rootNamespace": "",
     "references": [
         "GUID:fb0372492d0e7a54c844c70b80c80b58",

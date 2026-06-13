@@ -8,4 +8,11 @@ namespace CatCode.Events
 
         public void Raise() => Raised?.Invoke();
     }
+
+    public sealed class EventSignal<T> : IEventSignal<T>
+    {
+        public event Action<T> Raised;
+
+        public void Raise(T value) => Raised?.Invoke(value);
+    }
 }

@@ -4,4 +4,9 @@
     {
         void Raise();
     }
+
+    public interface IEventSignal<T> : IReadOnlyEventSignal<T>
+    {
+        void Raise(T value);
+    }
 }

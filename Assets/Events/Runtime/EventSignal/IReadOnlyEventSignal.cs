@@ -6,4 +6,9 @@ namespace CatCode.Events
     {
         event Action Raised;
     }
+
+    public interface IReadOnlyEventSignal<T>
+    {
+        event Action<T> Raised;
+    }
 }

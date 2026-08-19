@@ -5,21 +5,22 @@ using System;
 using System.Threading;
 using UnityEngine.Pool;
 
-namespace CatCode.Events.Promises
+namespace CatCode.EventPrimitives.Promises
 {
-    public sealed class EventValuePromise<T> : IUniTaskSource
+    public sealed class ObservableValuePromise<T> : IUniTaskSource
     {
-        private readonly static ObjectPool<EventValuePromise<T>> s_pool = new(() => new());
+        private readonly static ObjectPool<ObservableValuePromise<T>> s_pool = new(() => new());
 
-        static EventValuePromise()
+        static ObservableValuePromise()
         {
-            TaskPool.RegisterSizeGetter(typeof(EventValuePromise<T>), () => s_pool.CountAll);
+            TaskPool.RegisterSizeGetter(typeof(ObservableValuePromise<T>), () => s_pool.CountAll);
         }
 
         private readonly Action<T> _handler;
         private readonly Action _cancellationAction;
 
-        private IReadOnlyEventValue<T> _eventValue;
+        private IReadOnlyObservableValue<T> _value;
+        private ObservableSubscription _subscription;
         private ICondition<T> _predicate;
         private CancellationToken _cancellationToken;
         private CancellationTokenRegistration _cancellationTokenRegistration;
@@ -28,34 +29,35 @@ namespace CatCode.Events.Promises
         public short Version
             => _core.Version;
 
-        public EventValuePromise()
+        public ObservableValuePromise()
         {
             _handler = EventHandler;
             _cancellationAction = OnCancel;
         }
 
-        private void Init(IReadOnlyEventValue<T> eventValue, ICondition<T> predicate, CancellationToken cancellationToken)
+        private void Init(IReadOnlyObservableValue<T> value, ICondition<T> predicate, CancellationToken cancellationToken)
         {
             _cancellationToken = cancellationToken;
-            _eventValue = eventValue;
+            _value = value;
             _predicate = predicate;
 
-            _eventValue.Changed += _handler;
+            _subscription = _value.Subscribe(_handler);
 
             _core.Reset();
             if (_cancellationToken.CanBeCanceled)
                 _cancellationTokenRegistration = _cancellationToken.RegisterWithoutCaptureExecutionContext(_cancellationAction);
         }
-        public static IUniTaskSource Create(IReadOnlyEventValue<T> eventValue, ICondition<T> predicate, bool checkInitialState, CancellationToken cancellationToken, out short token)
+
+        public static IUniTaskSource Create(IReadOnlyObservableValue<T> value, ICondition<T> predicate, bool checkInitialState, CancellationToken cancellationToken, out short token)
         {
             if (cancellationToken.IsCancellationRequested)
                 return AutoResetUniTaskCompletionSource.CreateFromCanceled(cancellationToken, out token);
 
-            if (checkInitialState && predicate.Check(eventValue.Value))
+            if (checkInitialState && predicate.Check(value.Value))
                 return AutoResetUniTaskCompletionSource.CreateCompleted(out token);
 
             var promise = s_pool.Get();
-            promise.Init(eventValue, predicate, cancellationToken);
+            promise.Init(value, predicate, cancellationToken);
 
             TaskTracker.TrackActiveTask(promise, 3);
 
@@ -68,14 +70,14 @@ namespace CatCode.Events.Promises
             if (!_predicate.Check(value))
                 return;
 
-            _eventValue.Changed -= _handler;
+            _subscription.Unsubscribe();
             _cancellationTokenRegistration.Dispose();
             _core.TrySetResult(AsyncUnit.Default);
         }
 
         private void OnCancel()
         {
-            _eventValue.Changed -= _handler;
+            _subscription.Unsubscribe();
             _cancellationTokenRegistration.Dispose();
 
             _core.TrySetCanceled(_cancellationToken);
@@ -106,7 +108,7 @@ namespace CatCode.Events.Promises
         {
             TaskTracker.RemoveTracking(this);
 
-            _eventValue = null;
+            _value = null;
             _predicate = null;
             _cancellationToken = default;
 

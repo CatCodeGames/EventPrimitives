@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CatCode.EventPrimitives.Tests
 {
-    public class ArrayBackedLinkedListTests
+    public sealed class ArrayBackedLinkedListTests
     {
         [Test]
         public void Add()

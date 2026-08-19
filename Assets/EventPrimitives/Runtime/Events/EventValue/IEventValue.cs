@@ -1,4 +1,4 @@
-﻿namespace CatCode.Events
+﻿namespace CatCode.EventPrimitives
 {
     public interface IEventValue<T> : IReadOnlyEventValue<T>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine.Events;
 
-namespace CatCode.Events
+namespace CatCode.EventPrimitives
 {
     public sealed class UnityEventValueAdapter<T> : IReadOnlyEventValue<T>
     {

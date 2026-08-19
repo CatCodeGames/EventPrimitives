@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CatCode.Events
+namespace CatCode.EventPrimitives
 {
     public sealed class AggregatedEventValue<T> : IReadOnlyEventValue<T>, IDisposable
     {

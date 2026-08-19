@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "CatCode.EventPrimitives",
-        "CatCode.Events.UniTask"
+        "CatCode.EventPrimitives.UniTask",
+        "UniTask"
     ],
     "includePlatforms": [
         "Editor"

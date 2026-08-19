@@ -1,7 +1,7 @@
 
-namespace CatCode.Observables
+namespace CatCode.EventPrimitives
 {
-    public interface IReadonlyObservableValue<T> : IReadonlyObservableSource<T>
+    public interface IReadOnlyObservableValue<T> : IReadonlyObservableSource<T>
     {
         T Value { get; }
     }

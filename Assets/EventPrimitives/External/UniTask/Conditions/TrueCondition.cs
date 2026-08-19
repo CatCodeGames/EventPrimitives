@@ -1,4 +1,4 @@
-﻿namespace CatCode.Events
+﻿namespace CatCode.EventPrimitives
 {
     public sealed class TrueCondition<T> : ICondition<T>
     {

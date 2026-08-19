@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CatCode.Observables
+namespace CatCode.EventPrimitives
 {
     public sealed class ObservableValue<T> : IObservableValue<T>
     {

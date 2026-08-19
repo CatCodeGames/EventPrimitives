@@ -1,11 +1,11 @@
 ﻿#if EVENTS_UNITASK_SUPPORT
 
-using CatCode.Events.Promises;
+using CatCode.EventPrimitives.Promises;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
 
-namespace CatCode.Events
+namespace CatCode.EventPrimitives
 {
     public static class EventValueUniTaskExtensions
     {

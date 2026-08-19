@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using CatCode.Events;
+using CatCode.EventPrimitives;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 

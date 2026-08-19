@@ -1,7 +1,7 @@
 using CatCode.Collections;
 using System;
 
-namespace CatCode.Observables
+namespace CatCode.EventPrimitives
 {
     public interface ISubscriberStorage : ISlotStorage<Action>
     {

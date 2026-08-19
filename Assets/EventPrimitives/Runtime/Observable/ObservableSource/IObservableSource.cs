@@ -1,4 +1,4 @@
-namespace CatCode.Observables
+namespace CatCode.EventPrimitives
 {
     public interface IObservableSource : IReadonlyObservableSource
     {

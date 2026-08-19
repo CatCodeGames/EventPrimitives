@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CatCode.Events
+namespace CatCode.EventPrimitives
 {
     public struct EventValueSubscriptionToken<T> : IDisposable
     {

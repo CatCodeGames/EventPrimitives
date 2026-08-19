@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine.Pool;
 
-namespace CatCode.Events
+namespace CatCode.EventPrimitives
 {
     public sealed class FuncConditionPool<T>
     {

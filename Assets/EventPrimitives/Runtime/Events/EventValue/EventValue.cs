@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace CatCode.Events
+namespace CatCode.EventPrimitives
 {
     public sealed class EventValue<T> : IEventValue<T>
     {
@@ -25,10 +25,10 @@ namespace CatCode.Events
 
         public event Action<T> Changed;
 
-        public EventValue(T initial, NotificationMode notifyMode = NotificationMode.OnChanged, IEqualityComparer<T> comparer = null)
+        public EventValue(T initial, NotificationMode notifyMode = NotificationMode.OnChange, IEqualityComparer<T> comparer = null)
         {
             _value = initial;
-            _notifyOnlyOnChange = notifyMode == NotificationMode.OnChanged;
+            _notifyOnlyOnChange = notifyMode == NotificationMode.OnChange;
             _comparer = comparer ?? EqualityComparer<T>.Default;
         }
 

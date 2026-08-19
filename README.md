@@ -107,6 +107,9 @@ By default, `ArrayBackedLinkedList` is used — an array of slot structs that ar
 
 Custom `ISubscriberStorage` implementations can be provided when a different storage strategy is better suited to a particular scenario.
 
+#### Extension Methods
+
+- `WaitAsync` — asynchronously waits for an event using `UniTask` and `UniTaskCompletionSourceCore`.
 
 
 
@@ -212,3 +215,7 @@ subscribtion.Dispose();
 
 По умолчанию используется `ArrayBackedLinkedList` — массив структур-слотов с переиспользованием освобождённых слотов. Это позволяет уменьшить количество аллокаций при работе с подписчиками.
 При необходимости можно реализовать собственный `ISubscriberStorage` с другой структурой хранения.
+
+#### Методы расширения
+
+- `WaitAsync` — асинхронное ожидание события через `UniTask` на базе `UniTaskCompletionSourceCore`.

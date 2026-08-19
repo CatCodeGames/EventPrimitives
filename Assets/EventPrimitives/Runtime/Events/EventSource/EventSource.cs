@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CatCode.Events
+namespace CatCode.EventPrimitives
 {
     public sealed class EventSource : IEventSource
     {

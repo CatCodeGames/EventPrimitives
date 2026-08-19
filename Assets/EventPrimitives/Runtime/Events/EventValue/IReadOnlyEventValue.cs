@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace CatCode.Events
+namespace CatCode.EventPrimitives
 {
     public interface IReadOnlyEventValue<out T>
     {

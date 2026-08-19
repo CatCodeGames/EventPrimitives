@@ -5,21 +5,22 @@ using System;
 using System.Threading;
 using UnityEngine.Pool;
 
-namespace CatCode.Events.Promises
+namespace CatCode.EventPrimitives.Promises
 {
-    public sealed class EventSourcePromise : IUniTaskSource
+    public sealed class EventValuePromise<T> : IUniTaskSource
     {
-        private readonly static ObjectPool<EventSourcePromise> s_pool = new(() => new());
+        private readonly static ObjectPool<EventValuePromise<T>> s_pool = new(() => new());
 
-        static EventSourcePromise()
+        static EventValuePromise()
         {
-            TaskPool.RegisterSizeGetter(typeof(EventSourcePromise), () => s_pool.CountAll);
+            TaskPool.RegisterSizeGetter(typeof(EventValuePromise<T>), () => s_pool.CountAll);
         }
 
-        private readonly Action _handler;
+        private readonly Action<T> _handler;
         private readonly Action _cancellationAction;
 
-        private IReadOnlyEventSource _eventSource;
+        private IReadOnlyEventValue<T> _eventValue;
+        private ICondition<T> _predicate;
         private CancellationToken _cancellationToken;
         private CancellationTokenRegistration _cancellationTokenRegistration;
         private UniTaskCompletionSourceCore<AsyncUnit> _core;
@@ -27,31 +28,34 @@ namespace CatCode.Events.Promises
         public short Version
             => _core.Version;
 
-        public EventSourcePromise()
+        public EventValuePromise()
         {
             _handler = EventHandler;
             _cancellationAction = OnCancel;
         }
 
-        private void Init(IReadOnlyEventSource eventSource, CancellationToken cancellationToken)
+        private void Init(IReadOnlyEventValue<T> eventValue, ICondition<T> predicate, CancellationToken cancellationToken)
         {
             _cancellationToken = cancellationToken;
-            _eventSource = eventSource;
+            _eventValue = eventValue;
+            _predicate = predicate;
 
-            _eventSource.Raised += _handler;
+            _eventValue.Changed += _handler;
 
             _core.Reset();
-            if (_cancellationToken.CanBeCanceled)            
-                _cancellationTokenRegistration = _cancellationToken.RegisterWithoutCaptureExecutionContext(_cancellationAction);            
+            if (_cancellationToken.CanBeCanceled)
+                _cancellationTokenRegistration = _cancellationToken.RegisterWithoutCaptureExecutionContext(_cancellationAction);
         }
-
-        public static IUniTaskSource Create(IReadOnlyEventSource eventSource, CancellationToken cancellationToken, out short token)
+        public static IUniTaskSource Create(IReadOnlyEventValue<T> eventValue, ICondition<T> predicate, bool checkInitialState, CancellationToken cancellationToken, out short token)
         {
             if (cancellationToken.IsCancellationRequested)
                 return AutoResetUniTaskCompletionSource.CreateFromCanceled(cancellationToken, out token);
-            
+
+            if (checkInitialState && predicate.Check(eventValue.Value))
+                return AutoResetUniTaskCompletionSource.CreateCompleted(out token);
+
             var promise = s_pool.Get();
-            promise.Init(eventSource, cancellationToken);
+            promise.Init(eventValue, predicate, cancellationToken);
 
             TaskTracker.TrackActiveTask(promise, 3);
 
@@ -59,17 +63,21 @@ namespace CatCode.Events.Promises
             return promise;
         }
 
-        private void EventHandler()
+        private void EventHandler(T value)
         {
-            _eventSource.Raised -= _handler;
+            if (!_predicate.Check(value))
+                return;
+
+            _eventValue.Changed -= _handler;
             _cancellationTokenRegistration.Dispose();
             _core.TrySetResult(AsyncUnit.Default);
         }
 
         private void OnCancel()
         {
-            _eventSource.Raised -= _handler;
+            _eventValue.Changed -= _handler;
             _cancellationTokenRegistration.Dispose();
+
             _core.TrySetCanceled(_cancellationToken);
         }
 
@@ -98,12 +106,12 @@ namespace CatCode.Events.Promises
         {
             TaskTracker.RemoveTracking(this);
 
-            _eventSource = null;
+            _eventValue = null;
+            _predicate = null;
             _cancellationToken = default;
 
             s_pool.Release(this);
         }
     }
 }
-
 #endif

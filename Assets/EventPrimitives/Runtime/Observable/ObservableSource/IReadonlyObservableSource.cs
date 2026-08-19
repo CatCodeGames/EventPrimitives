@@ -1,6 +1,6 @@
 using System;
 
-namespace CatCode.Observables
+namespace CatCode.EventPrimitives
 {
     public interface IReadonlyObservableSource
     {

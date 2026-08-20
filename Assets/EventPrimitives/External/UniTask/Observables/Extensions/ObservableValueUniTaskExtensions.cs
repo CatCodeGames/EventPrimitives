@@ -1,3 +1,5 @@
+#if EVENTS_UNITASK_SUPPORT
+
 using CatCode.EventPrimitives.Promises;
 using Cysharp.Threading.Tasks;
 using System;
@@ -28,3 +30,4 @@ namespace CatCode.EventPrimitives
         }
     }
 }
+#endif

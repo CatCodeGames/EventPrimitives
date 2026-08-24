@@ -9,5 +9,7 @@ namespace CatCode.Collections
     public interface ISlotStorage<T> : ISlotStorage
     {
         SlotId Add(T item);
+        T Get(SlotId slotId);
+        bool TryGet(SlotId itemId, out T item);
     }
 }

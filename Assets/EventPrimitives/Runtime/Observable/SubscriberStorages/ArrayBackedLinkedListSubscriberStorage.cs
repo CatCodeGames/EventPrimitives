@@ -13,14 +13,19 @@ namespace CatCode.EventPrimitives
 
         public SlotId Add(Action action)
             => _storage.Add(action);
+        public Action Get(SlotId slotId)
+            => _storage.Get(slotId);
 
-        public bool Remove(SlotId itemId)
+        public bool TryGet(SlotId slotId, out Action item)
+            => _storage.TryGet(slotId, out item);
+
+        public bool Remove(SlotId slotId)
             => _publishDepth == 0
-                ? _storage.Remove(itemId)
-                : _storage.RemoveDeferred(itemId);
+                ? _storage.Remove(slotId)
+                : _storage.RemoveDeferred(slotId);
 
-        public bool IsValid(SlotId itemId)
-            => _storage.IsValid(itemId);
+        public bool IsValid(SlotId slotId)
+            => _storage.IsValid(slotId);
 
         public void Publish()
         {
@@ -48,14 +53,20 @@ namespace CatCode.EventPrimitives
 
         public SlotId Add(Action<T> action)
             => _storage.Add(action);
+        
+        public Action<T> Get(SlotId slotId)
+            => _storage.Get(slotId);
 
-        public bool Remove(SlotId itemId)
+        public bool TryGet(SlotId slotId, out Action<T> item)
+            => _storage.TryGet(slotId, out item);
+
+        public bool Remove(SlotId slotId)
             => _publishDepth == 0
-                ? _storage.Remove(itemId)
-                : _storage.RemoveDeferred(itemId);
+                ? _storage.Remove(slotId)
+                : _storage.RemoveDeferred(slotId);
 
-        public bool IsValid(SlotId itemId)
-            => _storage.IsValid(itemId);
+        public bool IsValid(SlotId slotId)
+            => _storage.IsValid(slotId);
 
         public void Publish(T value)
         {

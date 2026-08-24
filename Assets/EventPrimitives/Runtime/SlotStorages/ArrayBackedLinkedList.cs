@@ -81,15 +81,7 @@ namespace CatCode.Collections
 
             _slots = new Slot[capacity];
 
-            for (int i = 0; i < capacity - 1; i++)
-            {
-                ref var slot = ref _slots[i];
-                slot.Next = i + 1;
-                slot.RemovalNext = None;
-            }
-
-            _slots[^1].Next = None;
-            _freeHeadIndex = 0;
+            Clear();
         }
 
 
@@ -160,7 +152,7 @@ namespace CatCode.Collections
                 ref var slot = ref _slots[index];
 
                 _removalHeadIndex = slot.RemovalNext;
-                
+
                 UnlinkActive(ref slot);
                 FreeSlot(index, ref slot);
             }
@@ -205,6 +197,35 @@ namespace CatCode.Collections
 
         public Enumerator GetEnumerator()
             => new(_slots, _headIndex);
+
+
+        public void Clear()
+        {
+            for (int i = 0; i < _slots.Length; i++)
+            {
+                ref var slot = ref _slots[i];
+
+                slot.Item = default;
+                slot.Generation++;
+                slot.Prev = i - 1;
+                slot.Next = i + 1;
+                slot.RemovalNext = None;
+            }
+
+            ref var first = ref _slots[0];
+            first.Prev = None;
+
+            ref var last = ref _slots[^1];
+            last.Next = None;
+
+            _headIndex = None;
+            _tailIndex = None;
+            _removalHeadIndex = None;
+            _removalTailIndex = None;
+
+            _freeHeadIndex = 0;
+            _count = 0;
+        }
 
         private int AllocateSlot()
         {
